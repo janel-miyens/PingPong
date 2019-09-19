@@ -14,15 +14,43 @@ $(document).ready(function(){
 
     initialize();
 	
-    $("#loginButton").on("click", play);
+    $("#loginButton").on("click", serverPlay);
     $("#continueButton").on("click", continueGame);
     $("#playAgainButton").on("click", reload);
 
+    socket.on('startGame', function(){
+
+      play();
+
+    });
+
+    socket.on('serveSwipeData', function(evt){
+
+        mouseX = evt.stageX;
+        mouseY = evt.stageY;
+
+    });
+
+    socket.on('displayCoupon', function(){
+
+        $("#nonGameComponent").removeClass("hide");
+        $("#win").removeClass("hide");
+        $("#playAgain").addClass("hide");
+        $("#foodPhoto").append('<img class = "image" src="' + player.foodURL + '">');
+        $("#qrCode").append('<img class = "image" src="' + player.qrCodeURL + '">');
+
+    });
+
+    socket.on('displayTryAgain', function(){
+
+        $("#nonGameComponent").removeClass("hide");
+        $("#win").addClass("hide");
+        $("#playAgain").removeClass("hide");
+
+    });
+
     function play(){
 
-
-        $("#nonGameComponent").addClass("hide");
-        $("#introduction").addClass("hide");
         $("#win").addClass("hide");
         $("#playAgain").addClass("hide");
 
@@ -38,7 +66,7 @@ $(document).ready(function(){
 
         playerScore = 0;
         botScore = 0;
-        time = 30;
+        time = 10;
         frameCount = 0;
 
         ball.x =  center.x;
@@ -53,38 +81,16 @@ $(document).ready(function(){
 
     function winGame(){
 
-        $("#nonGameComponent").removeClass("hide");
-        $("#win").removeClass("hide");
-        $("#playAgain").addClass("hide");
-
-        $("#foodPhoto").append('<img class = "foodImageLoader" src="' + player.imageLoader + '">');
-
-        $("#foodPhoto").append('<img id = "food" class = "image hide" src="' + player.foodURL + '">');
-
-        $( "#food" ).on("load", function() {
-            $("#food").removeClass('hide');
-            $(".foodImageLoader").addClass('hide');
-        });
-
-        $("#qrCode").append('<img class = "qrCodeImageLoader" src="' + player.imageLoader + '">');
-
-        $("#qrCode").append('<img id= "qrCodeImg" class = "image hide" src="' + player.qrCodeURL + '">');
-
-        $( "#qrCodeImg" ).on("load", function() {
-            $("#qrCodeImg").removeClass('hide');
-            $(".qrCodeImageLoader").addClass('hide');
-        });
 
         pauseGame();
+        socket.emit("win");
+
     }
 
     function continueGame(){
 
-        $("#nonGameComponent").removeClass("hide");
-        $("#win").addClass("hide");
-        $("#playAgain").removeClass("hide");
-
         pauseGame();
+        socket.emit("lose");
     }
 
     function reload(){
@@ -102,7 +108,7 @@ $(document).ready(function(){
 
         playerScore = 0;
         botScore = 0;
-        time = 30;
+        time = 10;
         frameCount = 0;
         winPoints = 5; 
 
@@ -338,8 +344,9 @@ $(document).ready(function(){
     }
 
     function swipeControl(evt){
-        mouseX = evt.stageX;
-        mouseY = evt.stageY;
+        // mouseX = evt.stageX;
+        // mouseY = evt.stageY;
+        socket.emit("control", {id: myId, x: evt.stageX, y:evt.stageY});
     }
 
     function keyDown(keyCode){

@@ -6,7 +6,6 @@
     var playAreaLon = 120.98551709999998;
     var initialY, initialX;
 
-
     socket.on('askLocation', function(id){
 
         myId = id;
@@ -44,25 +43,18 @@
         
         }else if  (pos == 2){
        
-        	$(".notification").show();
+        	$(".que-notif").show();
 
-          $(".notification").text("You are the next player "+myId);
+          $(".notification-text").text("You are the next player "+myId);
         
         }else{
 
-          $(".notification").show();
+          $(".que-notif").show();
 
-          $(".notification").text(myId+" please standby you are "+pos+" in QUE");
+          $(".notification-text").text(myId+" please standby you are "+pos+" in QUE");
 
         }
     });
-
-    // socket.on('swipe', function(data){
-// console.log(data);
-// $(".notification").text(data.stageY);
-        // mouseX = data.stageX;
-        // mouseY = data.stageY;
-    // });
 
     function getLocation() {
 
@@ -136,8 +128,16 @@
 
     function gameOver(){
 
-        $(".notification").text("Download the coupon!");
+        return;
 
-        $(".controller").hide();
+    }
+
+     function serverPlay(){
+
+       $(".que-notif").hide();
+       $("#nonGameComponent").addClass("hide");
+       $("#userInterface").show();
+       $("#introduction").addClass("hide");
+        socket.emit('play');
 
     }
