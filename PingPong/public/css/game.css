@@ -8,9 +8,13 @@ html, body{
     display: flex;
 }
 
+.controller{
+    display: none !important;
+}
+
 #gameContainer{
 
-	display: block;
+	display: none;
     width: 80%;
     height: auto;
     margin: auto;
@@ -70,6 +74,7 @@ html, body{
 }
 
 #nonGameComponent{
+    display: none;
 	width: 100%;
     height: 100%;
     position: absolute;
