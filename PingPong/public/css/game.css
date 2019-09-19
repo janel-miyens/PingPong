@@ -1,0 +1,223 @@
+
+html, body{
+	height: 100%;
+    width: 100%;
+    width: -moz-available;
+    margin: 0;
+    font-family: 'Arial' !important;
+    display: flex;
+}
+
+#gameContainer{
+
+	display: block;
+    width: 80%;
+    height: auto;
+    margin: auto;
+    min-width: 300px;
+    overflow: hidden;
+}
+
+.displayData-block{
+    width: 32%;
+    height: 100%;
+    display: inline;
+    font-size: 2vw;
+    line-height: 60px;
+}
+
+#displayData div:nth-child(1){
+	float: left;
+}
+
+#displayData div:nth-child(3){
+	float: right;
+}
+
+#gameScene{
+	width: 90%;
+    background: gray;
+    position: relative;
+    display: block;
+    margin: 0 auto;
+    border-radius: 5px;
+} 
+
+#displayData{
+    width: 90%;
+    height: 50%;
+    margin: 0 auto;
+    display: block;
+    position: relative;
+    text-align: center;
+    margin-top: 10px;
+}
+
+#swiper{
+	width: 100%;
+    height: 100%;    
+}
+
+#userInterface{
+	background: gray;
+	border: 1px solid;
+	width: auto;
+	height: 95%;
+	display: inline-table;
+	overflow: hidden;
+	margin: auto;
+	max-height: 300px;
+}
+
+#nonGameComponent{
+	width: 100%;
+    height: 100%;
+    position: absolute;
+    background: #3e3e3e;
+
+}
+
+#panel{
+    border: 1px solid white;
+    width: 100%;
+    height: 100%;
+    max-width: 768px;
+    margin: 0 auto;
+    background: #3a4851;
+    text-align: center;
+    color: white;
+    border-top: none;
+    border-bottom: none;
+}
+
+#introduction, #win, #playAgain{
+    height: 100%;
+    width: 100%;
+}
+
+.upperSection{
+    height: 45%;
+}
+
+.lowerSection{
+    height: 55%;
+}
+
+.mainText{
+    position: relative;
+    top: 50%;
+    font-size: calc(5vw + 10px);
+}
+
+.action-blocks{
+    height: 50%;
+}
+
+#loginButton, #playAgainButton, #continueButton{
+    border-radius: 100px;
+    margin: 0 auto;
+    font-size: 20px;
+    line-height: 65px;
+    height: 65px;
+    width: 70%;
+    max-width: 500px;
+    background: #48565f;
+    position: relative;
+    top: 50%;
+}
+
+#agreementText{
+    margin: 0 auto;
+    width: 30%;
+    min-width: 160px;
+    height: fit-content;
+    font-size: 12px;
+}
+
+#loader{
+    background: #252525;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 1000;
+}
+
+.loaderImage{
+    position: absolute;
+    top: calc(50% - 20px);
+    left: calc(50% - 20px);
+    width: 40px;
+    height: 40px;
+    background-image: url('../images/loader.gif');
+    background-size: 40px;
+    background-repeat: no-repeat;
+}
+
+.hide{
+	display: none !important;
+}
+
+#win > div:nth-child(1){
+    height: 10%;
+}
+
+#win > div:nth-child(2){
+    height: 20%;   
+}
+
+#win > div:nth-child(3){
+    height: 30%;   
+}
+
+#win > div:nth-child(4){
+    height: 40%;   
+}
+
+#win > div:nth-child(4) > div:nth-child(1){
+    height: 50%;   
+}
+
+#win > div:nth-child(4) > div:nth-child(2){
+    height: 50%;
+    line-height: 50px;
+}
+
+#win div:nth-child(1) span, #playAgain div:nth-child(1) span{
+    line-height: 70px;
+    font-size: 4vw;
+}
+
+#playAgain > div:nth-child(1){
+    height: 20%;   
+}
+
+#playAgain > div:nth-child(2){
+    height: 30%;   
+}
+
+#playAgain > div:nth-child(3){
+    height: 50%;   
+}
+
+#foodPhoto, #qrCode{
+    display: inline-block;
+    width: 40%;
+    height: 100%;
+}
+
+.image{
+    width: 70%;
+    position: relative;
+    top: calc(50% - 50px);
+    max-width: 160px;
+    min-width: 80px;
+}
+
+#userImage > img{
+    width: 24%;
+    max-width: 160px;
+}
+
+.imageLoader{
+    background-image: url("../images/loader.gif");
+}
