@@ -4,6 +4,14 @@
 
 $(document).ready(function(){
 
+    player = {
+        
+            imageURL: "images/avatar.png",
+            foodURL: "images/food.png",
+            qrCodeURL: "images/qrCode.png",
+            imageLoader: "images/loader.gif"
+    };
+
     initialize();
 	
     $("#loginButton").on("click", serverPlay);
@@ -49,6 +57,11 @@ $(document).ready(function(){
         createjs.Ticker.addEventListener("tick", update);
     }
 
+    function loadComplete(img, imageLoader){
+        $(img).removeClass('hide');
+        $(imageLoader).addClass('hide');
+    }
+
     function restartGame(){
 
         playerScore = 0;
@@ -67,6 +80,7 @@ $(document).ready(function(){
     }
 
     function winGame(){
+
 
         pauseGame();
         socket.emit("win");
@@ -96,13 +110,7 @@ $(document).ready(function(){
         botScore = 0;
         time = 10;
         frameCount = 0;
-        winPoints = 5;
-
-        player = {
-            imageURL: "images/avatar.png",
-            foodURL: "images/food.png",
-            qrCodeURL: "images/qrCode.png"
-        };
+        winPoints = 5; 
 
         $("#userImage").append('<img src="' + player.imageURL + '">');
 

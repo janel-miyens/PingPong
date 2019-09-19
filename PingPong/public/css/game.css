@@ -151,7 +151,7 @@ html, body{
     z-index: 1000;
 }
 
-#loaderImage{
+.loaderImage{
     position: absolute;
     top: calc(50% - 20px);
     left: calc(50% - 20px);
@@ -225,4 +225,8 @@ html, body{
 #userImage > img{
     width: 24%;
     max-width: 160px;
+}
+
+.imageLoader{
+    background-image: url("../images/loader.gif");
 }
