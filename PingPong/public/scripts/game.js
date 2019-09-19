@@ -18,7 +18,7 @@ $(document).ready(function(){
         $("#win").addClass("hide");
         $("#playAgain").addClass("hide");
 
-        //createjs.Ticker.addEventListener("tick", update);
+        createjs.Ticker.addEventListener("tick", update);
     }
 
     function restartGame(){
@@ -84,7 +84,7 @@ $(document).ready(function(){
             qrCodeURL: "images/qrCode.png"
         };
 
-        $("#userImage").append('<img class = "image" src="' + player.imageURL + '">');
+        $("#userImage").append('<img src="' + player.imageURL + '">');
 
 
         //Create a stage by getting a reference to the canvas

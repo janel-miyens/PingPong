@@ -19,7 +19,6 @@ html, body{
 }
 
 .displayData-block{
-    border: 1px solid;
     width: 32%;
     height: 100%;
     display: inline;
@@ -212,4 +211,9 @@ html, body{
     top: calc(50% - 50px);
     max-width: 160px;
     min-width: 80px;
+}
+
+#userImage > img{
+    width: 24%;
+    max-width: 160px;
 }
