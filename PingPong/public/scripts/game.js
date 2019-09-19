@@ -4,6 +4,14 @@
 
 $(document).ready(function(){
 
+    player = {
+        
+            imageURL: "images/avatar.png",
+            foodURL: "images/food.png",
+            qrCodeURL: "images/qrCode.png",
+            imageLoader: "images/loader.gif"
+    };
+
     initialize();
 	
     $("#loginButton").on("click", play);
@@ -19,6 +27,11 @@ $(document).ready(function(){
         $("#playAgain").addClass("hide");
 
         createjs.Ticker.addEventListener("tick", update);
+    }
+
+    function loadComplete(img, imageLoader){
+        $(img).removeClass('hide');
+        $(imageLoader).addClass('hide');
     }
 
     function restartGame(){
@@ -44,8 +57,23 @@ $(document).ready(function(){
         $("#win").removeClass("hide");
         $("#playAgain").addClass("hide");
 
-        $("#foodPhoto").append('<img class = "image" src="' + player.foodURL + '">');
-        $("#qrCode").append('<img class = "image" src="' + player.qrCodeURL + '">');
+        $("#foodPhoto").append('<img class = "foodImageLoader" src="' + player.imageLoader + '">');
+
+        $("#foodPhoto").append('<img id = "food" class = "image hide" src="' + player.foodURL + '">');
+
+        $( "#food" ).on("load", function() {
+            $("#food").removeClass('hide');
+            $(".foodImageLoader").addClass('hide');
+        });
+
+        $("#qrCode").append('<img class = "qrCodeImageLoader" src="' + player.imageLoader + '">');
+
+        $("#qrCode").append('<img id= "qrCodeImg" class = "image hide" src="' + player.qrCodeURL + '">');
+
+        $( "#qrCodeImg" ).on("load", function() {
+            $("#qrCodeImg").removeClass('hide');
+            $(".qrCodeImageLoader").addClass('hide');
+        });
 
         pauseGame();
     }
@@ -76,13 +104,7 @@ $(document).ready(function(){
         botScore = 0;
         time = 30;
         frameCount = 0;
-        winPoints = 5;
-
-        player = {
-            imageURL: "images/avatar.png",
-            foodURL: "images/food.png",
-            qrCodeURL: "images/qrCode.png"
-        };
+        winPoints = 5; 
 
         $("#userImage").append('<img src="' + player.imageURL + '">');
 
