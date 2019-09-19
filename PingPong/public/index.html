@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0"/>
+		<link media="all" type="text/css" rel="stylesheet" href="css/game.css">
+		<style>
+			
+
+		</style>
+	</head>
+
+	<body>
+
+		<div id = "gameContainer" class = "">
+			
+			<canvas id="gameScene"></canvas>
+			<div id = "displayData">
+				<div class="displayData-block">Time:  <span class = "timeCD">30</span></div>
+				<div id="userImage" class="displayData-block"></div>
+				<div class="displayData-block">Score: <span class = "playerScore">0</span></div>
+			</div>
+			
+		</div>
+		<canvas id="userInterface"></canvas>
+
+		<div id = "nonGameComponent">
+
+			<div id = "loader"><div id="loaderImage"></div></div>
+
+			<div id = "panel">
+
+				<div id = "introduction">
+					<div class ="upperSection"><div class ="mainText">Welcome to Pick & Play</div></div>
+					<div class ="lowerSection">
+						<div class="action-blocks">
+							<div id = "loginButton">Login with Facebook</div>
+						</div>
+						<div class="action-blocks">
+							<div id = "agreementText">By logging in you accept the terms and conditions</div>
+						</div>
+					</div>
+				</div>
+
+				<div id = "win" class = "hide">
+					<div><span>Pick & Play</span></div>
+					<div><div class ="mainText">Congratulations, You win!</div></div>
+					<div><div id="foodPhoto"></div><div id="qrCode"></div></div>
+					<div>
+						<div><div id = "continueButton">Continue</div></div>
+						<div>Claim at all branches</div>
+					</div>
+
+				</div>
+
+				<div id = "playAgain" class = "hide">
+					<div><span>Pick & Play</span></div>
+					<div>
+						<div class ="mainText">Nice Game</div>
+					</div>
+					<div>
+						<div id ="playAgainButton">Play Again</div>
+					</div>
+				</div>
+				
+			</div>
+
+			
+
+		</div>
+		
+		
+		
+		
+
+		<script src = "scripts/easeljs.min.js"></script>
+		<script src = "scripts/jQuery.js"></script>
+		<script src="scripts/preloadJS.js"></script>
+		<script src = "scripts/game.js"></script>
+	</body>
+
+
+</html>
