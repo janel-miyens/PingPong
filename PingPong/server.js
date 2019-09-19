@@ -18,7 +18,7 @@ io.on('connection', function(socket){
 
    	socket.on('disconnect', function (){
 
-	  console.log("disconnected: "+socket.id); // this.id is the 'id' of the socket that got disconnected
+	  console.log("disconnected: "+socket.id);
 
 	  	var index = socketsIds.indexOf(socket.id);
 
@@ -28,29 +28,31 @@ io.on('connection', function(socket){
 
 		console.log(socketsIds);
 
-		console.log("total: "+io.engine.clientsCount);
-
 		socket.broadcast.emit('updateQue', socketsIds);
 	
 	});
 
-	socket.on('quit', function(data){
+	socket.on('play', function(){
 
-		console.log("user to be disconnected "+data.id);
+		socket.broadcast.to(socketsIds[0]).emit('startGame');
+		console.log("now playing...");
 
-		io.sockets.sockets[data.id].disconnect();
+	});
 
-		var index = socketsIds.indexOf(data.id);
+	socket.on('lose', function(){
 
-		if (index > -1) {
-		  socketsIds.splice(index, 1);
-		}
 
-		console.log(socketsIds);
+		socket.broadcast.to(socketsIds[1]).emit('displayTryAgain');
 
-		console.log("total: "+io.engine.clientsCount);
+		io.sockets.sockets[socketsIds[1]].disconnect();
 
-		socket.broadcast.emit('updateQue', socketsIds);
+	});
+
+	socket.on('win', function(){
+
+		socket.broadcast.to(socketsIds[1]).emit('displayCoupon');
+
+		io.sockets.sockets[socketsIds[1]].disconnect();
 
 	});
 
@@ -62,7 +64,7 @@ io.on('connection', function(socket){
 
 	socket.on('control', function(event){
 
-        // socket.emit('serveSwipeData', {stageX: event.x, stageY: event.y});
+        if (socketsIds[1] == event.id)
         socket.broadcast.to(socketsIds[0]).emit('serveSwipeData', {stageX: event.x, stageY: event.y});
     });
 
