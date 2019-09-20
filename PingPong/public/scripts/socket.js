@@ -42,16 +42,24 @@
             
         
         }else if  (pos == 2){
-       
+
+          $("#nonGameComponent").show();
+         
+          $("#introduction").hide();
+
         	$(".que-notif").show();
 
           $(".notification-text").text("You are the next player "+myId);
         
         }else{
+          
+          $("#nonGameComponent").show();
+
+          $("#introduction").hide();
 
           $(".que-notif").show();
 
-          $(".notification-text").text(myId+" please standby you are "+pos+" in QUE");
+          $(".notification-text").text("Please standby you are "+pos+" in QUE");
 
         }
     });
@@ -117,7 +125,7 @@
 
     function showGameUi(){
 
-            $("#gameContainer").show();
+      $("#gameContainer").show();
             
     }
 
