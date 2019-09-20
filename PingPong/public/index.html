@@ -10,8 +10,12 @@
 
 	<body>
 
-		<div id = "gameContainer" class = "">
-			
+		<div id = "gameContainer">
+
+			<div id = "gameScreen" >
+				<div class = "mainText">Pick & Play </div>
+			</div>
+
 			<canvas id="gameScene"></canvas>
 			<div id = "displayData">
 				<div class="displayData-block">Time:  <span class = "timeCD">30</span></div>
@@ -22,9 +26,7 @@
 		</div>
 		<canvas id="userInterface" class="controller"></canvas>
 
-		<div class="que-notif" style="display: none;">
-			<h1 class="notification-text"></h1>	
-		</div>
+		
 
 		<div id = "nonGameComponent">
 
@@ -49,7 +51,7 @@
 					<div><div class ="mainText">Congratulations, You win!</div></div>
 					<div><div id="foodPhoto"></div><div id="qrCode"></div></div>
 					<div>
-						<div><div id = "continueButton">Continue</div></div>
+						<div><div id = "continueButton">Play Again</div></div>
 						<div>Claim at all branches</div>
 					</div>
 
@@ -63,6 +65,10 @@
 					<div>
 						<div id ="playAgainButton">Play Again</div>
 					</div>
+				</div>
+
+				<div class="que-notif" style="display: none;">
+					<div class="notification-text mainText"></div>	
 				</div>
 				
 			</div>
