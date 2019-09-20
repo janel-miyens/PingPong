@@ -38,6 +38,8 @@
         }else if (pos == 1){
 
           $(".notification").hide();
+          $(".que-notif").hide();
+          $("#introduction").show();
             showControlUi();
             
         
@@ -49,7 +51,7 @@
 
         	$(".que-notif").show();
 
-          $(".notification-text").text("You are the next player "+myId);
+          $(".notification-text").text("You are the next player");
         
         }else{
           
@@ -59,7 +61,7 @@
 
           $(".que-notif").show();
 
-          $(".notification-text").text("Please standby you are "+pos+" in QUE");
+          $(".notification-text").text("Please standby you are "+ (pos - 1) +" in QUE");
 
         }
     });

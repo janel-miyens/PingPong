@@ -52,7 +52,8 @@ $(document).ready(function(){
 
         $("#win").addClass("hide");
         $("#playAgain").addClass("hide");
-        $("#gameScreen > div.mainText").text(startCountDown);
+        $("#gameScreen > div:nth-child(1)").addClass("hide");
+        $("#gameScreen > div:nth-child(2)").text(startCountDown);
         $("#gameScreen").css("background","#3a485100");
 
         createjs.Ticker.addEventListener("tick", update);
@@ -67,11 +68,12 @@ $(document).ready(function(){
 
         playerScore = 0;
         botScore = 0;
-        time = 10;
+        time = 30;
         frameCount = 0;
         startCountDown = 3;
 
-        $("#gameScreen > div.mainText").text("Pick & Play");
+        $("#gameScreen > div:nth-child(1)").removeClass("hide");
+        $("#gameScreen > div:nth-child(2)").text("");
         $("#gameScreen").css("background","#3a4851");
         $("#gameScreen").removeClass("hide");
 
@@ -80,14 +82,14 @@ $(document).ready(function(){
             y: canvasHeight/2
         };
 
-        ball.x =  center.x;
-        ball.y =  center.y;
+        ball.shape.x =  center.x;
+        ball.shape.y =  center.y;
         ball.dirX = -1;
         ball.dirY = -1;
         ball.speed = 2;
 
-        playerPadding.y = center.y;
-        botPadding.y = center.y;
+        playerPadding.shape.y = center.y;
+        botPadding.shape.y = center.y;
 
         $(".playerScore").text(playerScore);
         $(".timeCD").text(time);
@@ -119,13 +121,14 @@ $(document).ready(function(){
     function initialize(){
 
         playerScore = 0;
-        time = 10;
+        time = 30;
         frameCount = 0;
         winPoints = 3;
         startCountDown = 3; 
 
         $("#userImage").append('<img src="' + player.imageURL + '">');
-
+        $(".playerScore").text(playerScore);
+        $(".timeCD").text(time);
 
         //Create a stage by getting a reference to the canvas
         stage = new createjs.Stage("gameScene");
@@ -324,8 +327,7 @@ $(document).ready(function(){
 
             if(startCountDown != 0){
                 startCountDown--;
-                $("#gameScreen > div.mainText").text(startCountDown);
-                
+                $("#gameScreen > div:nth-child(2)").text(startCountDown);
             }
             else{   
 
@@ -346,6 +348,7 @@ $(document).ready(function(){
 
         if(startCountDown == 0){
             $("#gameScreen").addClass("hide");
+            $("#gameScreen > div:nth-child(1)").removeClass("hide");
 
             ball.move();
             ball.edgeBound();

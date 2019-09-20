@@ -12,15 +12,33 @@
 
 		<div id = "gameContainer">
 
-			<div id = "gameScreen" >
-				<div class = "mainText">Pick & Play </div>
+			<div id = "gameScreen">
+				<div class = "mainText"><img src="images/title.png"></img></div>
+				<div class = "mainText"></div>
 			</div>
 
+			<div class = "displayTitle"><img src="images/title.png"></img></div>
+
 			<canvas id="gameScene"></canvas>
-			<div id = "displayData">
-				<div class="displayData-block">Time:  <span class = "timeCD">30</span></div>
-				<div id="userImage" class="displayData-block"></div>
-				<div class="displayData-block">Score: <span class = "playerScore">0</span></div>
+
+			<div class = "displayData">
+
+				<div class = "displayData-blocks">
+					<div>
+						<div>Time: <span class = "timeCD">0</span></div>
+					</div>
+				</div>
+
+				<div class = "displayData-blocks">
+					<div></div>
+				</div>
+
+				<div class = "displayData-blocks">
+					<div>
+						<div>Score: <span class = "playerScore">0</span></div>
+					</div>
+				</div>
+
 			</div>
 			
 		</div>
@@ -34,31 +52,34 @@
 
 			<div id = "panel">
 
-				<div id = "introduction" >
+				<div id = "introduction">
 					<div class ="upperSection"><div class ="mainText">Welcome to Pick & Play</div></div>
 					<div class ="lowerSection">
 						<div class="action-blocks">
 							<div id = "loginButton">Login with Facebook</div>
 						</div>
 						<div class="action-blocks">
-							<div id = "agreementText">By logging in you accept the terms and conditions</div>
+							<a href = "www.miyens.com" id = "agreementText">By logging in you accept the terms and conditions</a>
 						</div>
 					</div>
 				</div>
 
 				<div id = "win" class = "hide">
-					<div><span>Pick & Play</span></div>
+
+					<div class = "displayTitle"><img src ="images/title.png"></img></div>
+
 					<div><div class ="mainText">Congratulations, You win!</div></div>
 					<div><div id="foodPhoto"></div><div id="qrCode"></div></div>
 					<div>
+						<div><div id = "downloadButton">Download QR code</div></div>
 						<div><div id = "continueButton">Play Again</div></div>
-						<div>Claim at all branches</div>
 					</div>
 
 				</div>
 
 				<div id = "playAgain" class = "hide">
-					<div><span>Pick & Play</span></div>
+
+					<div class = "displayTitle"><img src ="images/title.png"></img></div>
 					<div>
 						<div class ="mainText">Nice Game</div>
 					</div>
