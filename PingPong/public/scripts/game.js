@@ -1,6 +1,6 @@
     
 	var stage, canvasWidth, canvasHeight, ball, key, playerPadding, botPadding, playerScore, botScore, mouseX, mouseY, swiperStage;
-	var swiperWidth, swiperHeight, time, frameCount, center, player, winPoints;
+	var swiperWidth, swiperHeight, time, frameCount, center, player, winPoints, startCountDown;
 
 $(document).ready(function(){
 
@@ -15,11 +15,10 @@ $(document).ready(function(){
     initialize();
 	
     $("#loginButton").on("click", serverPlay);
-    $("#continueButton").on("click", continueGame);
+    $("#continueButton").on("click", reload);
     $("#playAgainButton").on("click", reload);
 
     socket.on('startGame', function(){
-
       play();
 
     });
@@ -53,6 +52,8 @@ $(document).ready(function(){
 
         $("#win").addClass("hide");
         $("#playAgain").addClass("hide");
+        $("#gameScreen > div.mainText").text(startCountDown);
+        $("#gameScreen").css("background","#3a485100");
 
         createjs.Ticker.addEventListener("tick", update);
     }
@@ -68,9 +69,22 @@ $(document).ready(function(){
         botScore = 0;
         time = 10;
         frameCount = 0;
+        startCountDown = 3;
+
+        $("#gameScreen > div.mainText").text("Pick & Play");
+        $("#gameScreen").css("background","#3a4851");
+        $("#gameScreen").removeClass("hide");
+
+        center = {
+            x: canvasWidth/2,
+            y: canvasHeight/2
+        };
 
         ball.x =  center.x;
         ball.y =  center.y;
+        ball.dirX = -1;
+        ball.dirY = -1;
+        ball.speed = 2;
 
         playerPadding.y = center.y;
         botPadding.y = center.y;
@@ -80,7 +94,6 @@ $(document).ready(function(){
     }
 
     function winGame(){
-
 
         pauseGame();
         socket.emit("win");
@@ -97,9 +110,8 @@ $(document).ready(function(){
         location.reload();
     }
 
-
-
     function pauseGame(){
+
          createjs.Ticker.removeEventListener("tick", update);
          restartGame();
     }
@@ -107,10 +119,10 @@ $(document).ready(function(){
     function initialize(){
 
         playerScore = 0;
-        botScore = 0;
         time = 10;
         frameCount = 0;
-        winPoints = 5; 
+        winPoints = 3;
+        startCountDown = 3; 
 
         $("#userImage").append('<img src="' + player.imageURL + '">');
 
@@ -138,7 +150,6 @@ $(document).ready(function(){
             key = (key || []);
             key[e.keyCode] = (e.type == "keydown");
         });
-
          
         ball = new gameBall("black", center.x, center.y, 3, 2);
         playerPadding = new gamePadding("cyan", 10,  center.y, 2.5, 25);
@@ -159,8 +170,8 @@ $(document).ready(function(){
         this.shape.regY = r/2;
         this.shape.x = x;
         this.shape.y = y;
-        this.dirX = 1;
-        this.dirY = 1;
+        this.dirX = -1;
+        this.dirY = -1;
         this.r = r;
         this.speed = speed;
 
@@ -310,25 +321,39 @@ $(document).ready(function(){
         //60 frame = 1 seconds
         if(frameCount > 60 && time != 0){
             frameCount = 0;
-            time--;
-            $(".timeCD").text(time);
 
-            if(time == 0){
-                if(playerScore >= winPoints){
-                    winGame();
-                }
-                else{
-                    continueGame();
+            if(startCountDown != 0){
+                startCountDown--;
+                $("#gameScreen > div.mainText").text(startCountDown);
+                
+            }
+            else{   
+
+                time--;
+                $(".timeCD").text(time);
+
+                if(time == 0){
+                    if(playerScore >= winPoints){
+                        winGame();
+                    }
+                    else{
+                        continueGame();
+                    }
+
                 }
             }
         }
 
-        ball.move();
-        ball.edgeBound();
-        ball.collideOnPadding(playerPadding, 1);
-        ball.collideOnPadding(botPadding, -1);
-        ball.outOfBound(2);
+        if(startCountDown == 0){
+            $("#gameScreen").addClass("hide");
 
+            ball.move();
+            ball.edgeBound();
+            ball.collideOnPadding(playerPadding, 1);
+            ball.collideOnPadding(botPadding, -1);
+            ball.outOfBound(2);
+
+        }
 
         playerPadding.move(2);
         //playerPadding.playerControl();
@@ -338,8 +363,10 @@ $(document).ready(function(){
         botPadding.move(1);
         botPadding.botControl(ball);
         botPadding.edgeBound();
-        
+            
         stage.update();
+
+        
 
     }
 
