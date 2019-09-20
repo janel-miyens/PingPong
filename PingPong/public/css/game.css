@@ -7,6 +7,7 @@ html, body{
     font-family: 'Arial' !important;
     display: flex;
     overflow: hidden;
+    background: #3a4851;
 }
 
 .que-notif{
@@ -19,26 +20,10 @@ html, body{
 
 	display: none;
     width: 80%;
-    height: auto;
-    margin: auto;
+    height: 100%;
+    margin: 0 auto;
     min-width: 300px;
     overflow: hidden;
-}
-
-.displayData-block{
-    width: 32%;
-    height: 100%;
-    display: inline;
-    font-size: 2vw;
-    line-height: 60px;
-}
-
-#displayData div:nth-child(1){
-	float: left;
-}
-
-#displayData div:nth-child(3){
-	float: right;
 }
 
 #gameScene{
@@ -48,19 +33,20 @@ html, body{
     display: block;
     margin: 0 auto;
     border-radius: 5px;
-    height: 50%;
-    margin-top: 20px;
+    height: auto;
     max-width: 768px;
 } 
 
-#displayData{
+.displayData{
     width: 90%;
-    height: 50%;
+    height: 20%;
+    max-width: 768px;
     margin: 0 auto;
     display: block;
     position: relative;
     text-align: center;
     margin-top: 10px;
+    color: white;
 }
 
 #userInterface{
@@ -75,8 +61,9 @@ html, body{
 }
 
 #nonGameComponent{
+    /*display: none;*/
     display: none;
-	width: 100%;
+	width: calc(100% - 1px);
     height: 100%;
     position: absolute;
     background: #3e3e3e;
@@ -121,7 +108,7 @@ html, body{
     height: 50%;
 }
 
-#loginButton, #playAgainButton, #continueButton{
+#loginButton, #playAgainButton, #downloadButton{
     border-radius: 100px;
     margin: 0 auto;
     font-size: 20px;
@@ -132,6 +119,8 @@ html, body{
     background: #48565f;
     position: relative;
     top: 50%;
+    overflow: hidden;
+    cursor: pointer;
 }
 
 #agreementText{
@@ -140,6 +129,7 @@ html, body{
     min-width: 160px;
     height: fit-content;
     font-size: 12px;
+    color: white;
 }
 
 #loader{
@@ -170,7 +160,7 @@ html, body{
 }
 
 #win > div:nth-child(2){
-    height: 20%;   
+    height: 10%;   
 }
 
 #win > div:nth-child(3){
@@ -247,3 +237,74 @@ html, body{
 #gameScreen > div.mainText{
     top: 30%;
 }
+
+.displayTitle{
+    width: 90%;
+    margin: 0 auto;
+    text-align: center;
+    padding: 10px;
+    height: 10%;
+}
+
+.displayTitle > img{
+    width: 30%;
+    top: calc(50% - 10px);
+    position: relative;
+    max-width: 200px;
+}
+
+.displayData-blocks{
+    width: 31%;
+    height: 100%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.displayData > div:nth-child(1) > div{
+    background-image: url("../images/displayData.png");
+}
+
+.displayData > div:nth-child(2) > div{
+    background-image: url("../images/avatar.png");
+}
+
+.displayData > div:nth-child(3) > div{
+    background-image: url("../images/displayData.png");
+}
+
+.displayData-blocks > div{
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100%;
+}
+
+.displayData-blocks > div > div{
+    position: relative;
+    top: calc(50% - 10px);
+    font-size: calc(1vw + 12px);
+}
+
+.mainText > img{
+    width: calc(40% + 120px);
+}
+
+
+#continueButton {
+    border-radius: 100px;
+    margin: 0 auto;
+    font-size: 20px;
+    line-height: 65px;
+    height: 65px;
+    width: 70%;
+    max-width: 500px;
+    background: #48565f;
+    position: relative;
+    top: 30%;
+    overflow: hidden;
+    cursor: pointer;
+}
+    
+
+
