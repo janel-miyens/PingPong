@@ -6,11 +6,18 @@ html, body{
     margin: 0;
     font-family: 'Arial' !important;
     display: flex;
+    overflow: hidden;
+}
+
+.que-notif{
+
+    width: 100%;
+    height: 100%;
 }
 
 #gameContainer{
 
-	display: block;
+	display: none;
     width: 80%;
     height: auto;
     margin: auto;
@@ -35,12 +42,15 @@ html, body{
 }
 
 #gameScene{
-	width: 90%;
+    width: 90%;
     background: gray;
     position: relative;
     display: block;
     margin: 0 auto;
     border-radius: 5px;
+    height: 50%;
+    margin-top: 20px;
+    max-width: 768px;
 } 
 
 #displayData{
@@ -53,28 +63,24 @@ html, body{
     margin-top: 10px;
 }
 
-#swiper{
-	width: 100%;
-    height: 100%;    
-}
-
 #userInterface{
 	background: gray;
 	border: 1px solid;
 	width: auto;
 	height: 95%;
-	display: inline-table;
+	display: none;
 	overflow: hidden;
 	margin: auto;
 	max-height: 300px;
 }
 
 #nonGameComponent{
+    /*display: none;*/
 	width: 100%;
     height: 100%;
     position: absolute;
     background: #3e3e3e;
-
+    overflow: hidden;
 }
 
 #panel{
@@ -90,7 +96,7 @@ html, body{
     border-bottom: none;
 }
 
-#introduction, #win, #playAgain{
+#introduction, #win, #playAgain, #swiper{
     height: 100%;
     width: 100%;
 }
@@ -107,6 +113,8 @@ html, body{
     position: relative;
     top: 50%;
     font-size: calc(5vw + 10px);
+    text-align: center;
+    color: white;
 }
 
 .action-blocks{
@@ -215,9 +223,27 @@ html, body{
 
 #userImage > img{
     width: 24%;
-    max-width: 160px;
+    max-width: 140px;
 }
 
 .imageLoader{
     background-image: url("../images/loader.gif");
+}
+
+#gameScreen{
+    border: 5px white solid;
+    background: #3a4851;
+    width: calc(100% - 10px);
+    height: 100%;
+    position: absolute;
+    margin: 0;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    border-top: none;
+    border-bottom: none;
+}
+
+#gameScreen > div.mainText{
+    top: 30%;
 }

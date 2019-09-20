@@ -10,8 +10,12 @@
 
 	<body>
 
-		<div id = "gameContainer" class = "">
-			
+		<div id = "gameContainer">
+
+			<div id = "gameScreen" >
+				<div class = "mainText">Pick & Play </div>
+			</div>
+
 			<canvas id="gameScene"></canvas>
 			<div id = "displayData">
 				<div class="displayData-block">Time:  <span class = "timeCD">30</span></div>
@@ -20,7 +24,9 @@
 			</div>
 			
 		</div>
-		<canvas id="userInterface"></canvas>
+		<canvas id="userInterface" class="controller"></canvas>
+
+		
 
 		<div id = "nonGameComponent">
 
@@ -45,7 +51,7 @@
 					<div><div class ="mainText">Congratulations, You win!</div></div>
 					<div><div id="foodPhoto"></div><div id="qrCode"></div></div>
 					<div>
-						<div><div id = "continueButton">Continue</div></div>
+						<div><div id = "continueButton">Play Again</div></div>
 						<div>Claim at all branches</div>
 					</div>
 
@@ -60,22 +66,22 @@
 						<div id ="playAgainButton">Play Again</div>
 					</div>
 				</div>
+
+				<div class="que-notif" style="display: none;">
+					<div class="notification-text mainText"></div>	
+				</div>
 				
 			</div>
 
-			
-
 		</div>
-		
-		
-		
-		
 
+		<script type="text/javascript" src="scripts/socket.io.dev.js"></script>
+		<script type="text/javascript" src="scripts/socket.js"></script>
 		<script src = "scripts/easeljs.min.js"></script>
 		<script src = "scripts/jQuery.js"></script>
 		<script src="scripts/preloadJS.js"></script>
 		<script src = "scripts/game.js"></script>
+		
 	</body>
-
 
 </html>
