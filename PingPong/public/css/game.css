@@ -244,6 +244,7 @@ html, body{
     text-align: center;
     padding: 10px;
     height: 10%;
+    max-width: 768px;
 }
 
 .displayTitle > img{
@@ -305,6 +306,22 @@ html, body{
     overflow: hidden;
     cursor: pointer;
 }
+
+.displayTitle > span{
+    top: 90%;
+    position: sticky;
+    color: white;
+    font-size: calc(1vw + 5px);
+}
+
+.displayTitle > span:nth-child(1){
+    float: left;
+}
+
+.displayTitle > span:nth-child(3){
+    float: right;
+}
+
     
 
 
