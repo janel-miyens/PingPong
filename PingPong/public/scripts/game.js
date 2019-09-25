@@ -17,13 +17,15 @@ $(document).ready(function(){
     };
 
     qrCanvas = {
+        //canvas: document.getElementById("qrCanvas"),
         canvas: document.createElement("Canvas"),
         start: function(){
             this.context = this.canvas.getContext("2d");
-            this.canvas.width = 1280;
-            this.canvas.height = 720;
+            this.canvas.width = 480;
+            this.canvas.height = 500;
             this.centerX = this.canvas.width/2;
             this.centerY = this.canvas.height/2;
+            $(this.canvas).css("background-color","rgb(58, 72, 81)");
         }
     };
 
@@ -31,14 +33,14 @@ $(document).ready(function(){
 
     initialize();
 
-    createCanvasImage(qrCanvas.centerX - 150, 50, 300, 80, "images/title.png", titleImage);
-    createCanvasText(200, 250, "Congratulations, You win!", 80, "white");
+    createCanvasImage(qrCanvas.centerX, 60, 150, 40, "images/title.png", titleImage);
+    createCanvasText(80, 150, "Congratulations, You win!", 30, "white");
 
-    createCanvasImage( (qrCanvas.centerX + qrCanvas.centerX/2) - 300/2, qrCanvas.centerY - 50, 300, 300, player.qrCodeURL, qrImage);
+    createCanvasImage( (qrCanvas.centerX/2), 300, 200, 200, player.foodURL, foodImage);
 
-    createCanvasImage( (qrCanvas.centerX/2) - 300/2, qrCanvas.centerY - 50, 300, 300, player.foodURL, foodImage);
+    createCanvasImage( (qrCanvas.centerX + qrCanvas.centerX/2) , 300, 200, 200, player.qrCodeURL, qrImage);
 
-    createCanvasText( (qrCanvas.centerX + qrCanvas.centerX/2) - 150, qrCanvas.centerY + 300, numberCounter(player.qrNumber), 50, "cyan");
+    createCanvasText( (qrCanvas.centerX + 63) , 450, numberCounter(player.qrNumber), 40, "black");
 
     
 	
@@ -104,7 +106,7 @@ $(document).ready(function(){
         image = new Image();
         image.src = src;
         image.onload = function(){
-             qrCanvas.context.drawImage(image, x, y, w, h); 
+             qrCanvas.context.drawImage(image, x - w/2, y - h/2, w, h); 
          };
         
          
