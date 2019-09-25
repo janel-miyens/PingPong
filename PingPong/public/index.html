@@ -9,6 +9,10 @@
 	</head>
 
 	<body>
+			
+		<!--div id = "qr"><canvas id = "qrCanvas"></canvas>
+			<a id = "downloadButton" download = "QR.jpg" onclick="downloadQR(this);">Download QR code</a>
+		</div-->
 
 		<div id = "gameContainer">
 
@@ -63,7 +67,7 @@
 							<div id = "loginButton">Login with Facebook</div>
 						</div>
 						<div class="action-blocks">
-							<a href = "www.miyens.com" id = "agreementText">By logging in you accept the terms and conditions</a>
+							<a href="/images/qrCode.png" download="QRImage.png" id = "agreementText">By logging in you accept the terms and conditions</a>
 						</div>
 					</div>
 				</div>
@@ -75,7 +79,7 @@
 					<div><div class ="mainText">Congratulations, You win!</div></div>
 					<div><div id="foodPhoto"></div><div id="qrCode"></div></div>
 					<div>
-						<div><div id = "downloadButton">Download QR code</div></div>
+						<div><a id = "downloadButton" download = "QR.jpg" onclick="downloadQR(this);">Download QR code</a></div>
 						<div><div id = "continueButton">Play Again</div></div>
 					</div>
 

@@ -1,18 +1,46 @@
     
 	var stage, canvasWidth, canvasHeight, ball, key, playerPadding, botPadding, playerScore, botScore, mouseX, mouseY, swiperStage;
 	var swiperWidth, swiperHeight, time, frameCount, center, player, winPoints, startCountDown;
+    var qrCanvas, qrImage, foodImage, downloadQR, titleImage;
 
 $(document).ready(function(){
+
+    
 
     player = {
         
             imageURL: "images/avatar.png",
             foodURL: "images/food.png",
             qrCodeURL: "images/qrCode.png",
-            imageLoader: "images/loader.gif"
+            imageLoader: "images/loader.gif",
+            qrNumber: 0
     };
 
+    qrCanvas = {
+        canvas: document.createElement("Canvas"),
+        start: function(){
+            this.context = this.canvas.getContext("2d");
+            this.canvas.width = 1280;
+            this.canvas.height = 720;
+            this.centerX = this.canvas.width/2;
+            this.centerY = this.canvas.height/2;
+        }
+    };
+
+    qrCanvas.start();
+
     initialize();
+
+    createCanvasImage(qrCanvas.centerX - 150, 50, 300, 80, "images/title.png", titleImage);
+    createCanvasText(200, 250, "Congratulations, You win!", 80, "white");
+
+    createCanvasImage( (qrCanvas.centerX + qrCanvas.centerX/2) - 300/2, qrCanvas.centerY - 50, 300, 300, player.qrCodeURL, qrImage);
+
+    createCanvasImage( (qrCanvas.centerX/2) - 300/2, qrCanvas.centerY - 50, 300, 300, player.foodURL, foodImage);
+
+    createCanvasText( (qrCanvas.centerX + qrCanvas.centerX/2) - 150, qrCanvas.centerY + 300, numberCounter(player.qrNumber), 50, "cyan");
+
+    
 	
     $("#loginButton").on("click", serverPlay);
     $("#continueButton").on("click", reload);
@@ -47,6 +75,40 @@ $(document).ready(function(){
         $("#playAgain").removeClass("hide");
 
     });
+
+    downloadQR = function(el){
+        var image = qrCanvas.canvas.toDataURL("image/jpg", 1.0);
+        el.href = image;
+    }
+
+    function numberCounter(num){
+
+        if(num > 9999) return num.toString();
+        else if(num > 999) return "0"+num;
+        else if(num > 99) return "00"+num;
+        else if(num > 9) return "000"+num;
+        else if(num < 10) return "0000"+num;
+
+        return num; 
+    }
+
+    function createCanvasText(x, y, text, fontSize,color){
+        qrCanvas.context.font = fontSize+"px Arial";
+        qrCanvas.context.fillStyle = color;
+        qrCanvas.context.fillText(text, x, y);
+        
+    }
+
+    function createCanvasImage(x, y, w, h, src, image){
+
+        image = new Image();
+        image.src = src;
+        image.onload = function(){
+             qrCanvas.context.drawImage(image, x, y, w, h); 
+         };
+        
+         
+    }
 
     function play(){
 
