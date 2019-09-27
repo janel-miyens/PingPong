@@ -9,18 +9,49 @@
 	</head>
 
 	<body>
-
-		<div id = "gameContainer" class = "">
 			
+
+		<div id="unLocatedUser"><div class = "mainText"></div></div>
+
+		<div id = "gameContainer">
+
+			<div id = "gameScreen">
+				<div class = "mainText"><img src="images/title.png"/></div>
+				<div class = "mainText"></div>
+			</div>
+
+			<div class = "displayTitle">
+				<span>Player</span>
+				<img src="images/title.png"/>
+				<span>Bot</span>
+			</div>
+
 			<canvas id="gameScene"></canvas>
-			<div id = "displayData">
-				<div class="displayData-block">Time:  <span class = "timeCD">30</span></div>
-				<div id="userImage" class="displayData-block"></div>
-				<div class="displayData-block">Score: <span class = "playerScore">0</span></div>
+
+			<div class = "displayData">
+
+				<div class = "displayData-blocks">
+					<div>
+						<div>Time: <span class = "timeCD">0</span></div>
+					</div>
+				</div>
+
+				<div class = "displayData-blocks">
+					<div></div>
+				</div>
+
+				<div class = "displayData-blocks">
+					<div>
+						<div>Score: <span class = "playerScore">0</span></div>
+					</div>
+				</div>
+
 			</div>
 			
 		</div>
-		<canvas id="userInterface"></canvas>
+		<canvas id="userInterface" class="controller"></canvas>
+
+		
 
 		<div id = "nonGameComponent">
 
@@ -28,31 +59,34 @@
 
 			<div id = "panel">
 
-				<div id = "introduction" >
+				<div id = "introduction">
 					<div class ="upperSection"><div class ="mainText">Welcome to Pick & Play</div></div>
 					<div class ="lowerSection">
 						<div class="action-blocks">
 							<div id = "loginButton">Login with Facebook</div>
 						</div>
 						<div class="action-blocks">
-							<div id = "agreementText">By logging in you accept the terms and conditions</div>
+							<a href="/images/qrCode.png" download="QRImage.png" id = "agreementText">By logging in you accept the terms and conditions</a>
 						</div>
 					</div>
 				</div>
 
 				<div id = "win" class = "hide">
-					<div><span>Pick & Play</span></div>
+
+					<div class = "displayTitle"><img src ="images/title.png"/></div>
+
 					<div><div class ="mainText">Congratulations, You win!</div></div>
 					<div><div id="foodPhoto"></div><div id="qrCode"></div></div>
 					<div>
-						<div><div id = "continueButton">Continue</div></div>
-						<div>Claim at all branches</div>
+						<div><a id = "downloadButton" download = "QR.jpg" onclick="downloadQR(this);">Download QR code</a></div>
+						<div><div id = "continueButton">Play Again</div></div>
 					</div>
 
 				</div>
 
 				<div id = "playAgain" class = "hide">
-					<div><span>Pick & Play</span></div>
+
+					<div class = "displayTitle"><img src ="images/title.png"/></div>
 					<div>
 						<div class ="mainText">Nice Game</div>
 					</div>
@@ -60,22 +94,25 @@
 						<div id ="playAgainButton">Play Again</div>
 					</div>
 				</div>
+
+				<div class="que-notif" style="display: none;">
+					<div class="notification-text mainText"></div>	
+				</div>
 				
 			</div>
 
-			
-
 		</div>
-		
-		
-		
-		
 
+		<!--script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v4.0"></script>
+		<div class="fb-login-button" data-width="" data-size="large" data-button-type="continue_with" data-auto-logout-link="false" data-use-continue-as="false"></div-->
+
+		<script type="text/javascript" src="scripts/socket.io.dev.js"></script>
+		<script type="text/javascript" src="scripts/socket.js"></script>
 		<script src = "scripts/easeljs.min.js"></script>
 		<script src = "scripts/jQuery.js"></script>
 		<script src="scripts/preloadJS.js"></script>
 		<script src = "scripts/game.js"></script>
+		
 	</body>
-
 
 </html>
