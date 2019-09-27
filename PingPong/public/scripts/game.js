@@ -5,8 +5,6 @@
 
 $(document).ready(function(){
 
-    
-
     player = {
         
             imageURL: "images/avatar.png",
@@ -20,6 +18,7 @@ $(document).ready(function(){
         //canvas: document.getElementById("qrCanvas"),
         canvas: document.createElement("Canvas"),
         start: function(){
+            
             this.context = this.canvas.getContext("2d");
             this.canvas.width = 480;
             this.canvas.height = 500;
