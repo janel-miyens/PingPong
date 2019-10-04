@@ -1,3 +1,5 @@
+
+
 const express = require('express');
 const app = require('express')();
 const http = require('http').Server(app);
@@ -68,6 +70,15 @@ io.on('connection', function(socket){
         socket.broadcast.to(socketsIds[0]).emit('serveSwipeData', {stageX: event.x, stageY: event.y});
     });
 
+    socket.on('sendDataToServer', function(data){
+
+    	console.log(data);
+
+    	//zero id == host
+        socket.broadcast.to(socketsIds[0]).emit('sendDataToHost', data);
+
+    });
+
 	console.log("total: "+io.engine.clientsCount);
 	console.log(socketsIds);
 });
@@ -75,3 +86,4 @@ io.on('connection', function(socket){
 http.listen(port, function(){
   console.log('listening on *:8080');
 });
+
