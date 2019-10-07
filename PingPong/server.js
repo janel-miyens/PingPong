@@ -79,6 +79,15 @@ io.on('connection', function(socket){
 
     });
 
+    socket.on('sendCounterToServer', function(data){
+
+    	console.log(data);
+
+    	//one id == player
+        socket.broadcast.to(socketsIds[1]).emit('sendDataToPlayer', data);
+
+    });
+
 	console.log("total: "+io.engine.clientsCount);
 	console.log(socketsIds);
 });
