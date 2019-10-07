@@ -1,21 +1,23 @@
 
-    var socket = io();
+    var socket = io().connect();
     var myId;
     var myQue;
     var playAreaLat = 14.669939099999999;
     var playAreaLon = 120.98551709999998;
     var initialY, initialX;
 
+    //coupon, wholename, email, score, win
+    var retrieveAllData = [0, null, null, 0, "no"];
+
     socket.on('askLocation', function(id){
 
         myId = id;
 
-        // getLocation();//disable this if no internet connection to continue
-
+        getLocation();//disable this if no internet connection to continue
+              
         socket.emit('getMyQue');
 
     });
-
 
     socket.on('chat', function(data){
 
@@ -33,6 +35,9 @@
 
         }else if (pos == 0){
 
+            $("#introduction").hide();
+            $("#nonGameComponent").hide();
+            $(".controller").hide();
             showGameUi();
 
         }else if (pos == 1){
@@ -70,9 +75,10 @@
 
       if (navigator.geolocation) {
         
-        navigator.geolocation.getCurrentPosition(showPosition);
-      
-      } else {
+        navigator.geolocation.getCurrentPosition(showPosition, errorCallback);
+
+      } 
+      else {
         
         x.innerHTML = "Geolocation is not supported by this browser.";
       
@@ -84,6 +90,16 @@
 
         getDistanceFromLatLonInKm(position.coords.latitude, position.coords.longitude, playAreaLat, playAreaLon);
      
+    }
+
+    function errorCallback(error){
+
+      if (error.code == error.PERMISSION_DENIED) {
+
+        $("#unLocatedUser > div").text("You need to allow the location to play the game");
+        console.log("user denied request");
+
+      }
     }
 
     function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
@@ -99,9 +115,13 @@
       var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
       var d = R * c; // Distance in km
 
+      //console.log("getting location: "+d);
+
       if (d = ""){
 
-          $(".notification").text("You need to allow location to play the game");
+          $("#unLocatedUser > div").text("You need to allow the location to play the game");
+
+          //console.log("didnot allow");
 
           socket.emit('quit', { id: myId });
       
@@ -121,7 +141,7 @@
     }
 
     function deg2rad(deg) {
-      return deg * (Math.PI/180)
+      return deg * (Math.PI/180);
     }
 
 
@@ -151,3 +171,30 @@
         socket.emit('play');
 
     }
+
+socket.on('sendDataToHost', function(data){
+
+      // send data to HOST DOMAIN
+
+      $("#userImage").css("background","url("+data.imageUrl+")");
+
+      retrieveAllData[1] = data.firstName+" "+data.lastName;
+      retrieveAllData[2] = data.email;
+
+      console.log("data send to host: "+retrieveAllData);
+});
+
+// socket.on('sendDataToServer', function(data){
+
+//       // send data to HOST DOMAIN
+
+//       $("#userImage").css("background","url("+data.imageUrl+")");
+
+//       retrieveAllData[1] = data.firstname+" "+data.lastname;
+//       retrieveAllData[2] = data.email;
+
+//       console.log("data send to host: "+retrieveAllData);
+
+//       $("#userImage").css("background","url("+data.imageUrl+")");
+
+// });
