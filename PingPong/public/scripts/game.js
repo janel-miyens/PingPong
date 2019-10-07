@@ -1,4 +1,4 @@
-    
+
 	var stage, canvasWidth, canvasHeight, ball, key, playerPadding, botPadding, playerScore, botScore, mouseX, mouseY, swiperStage;
 	var swiperWidth, swiperHeight, time, frameCount, center, player, winPoints, startCountDown;
     var qrCanvas, qrImage, foodImage, downloadQR, titleImage;
@@ -11,7 +11,9 @@ $(document).ready(function(){
             foodURL: "images/food.png",
             qrCodeURL: "images/qrCode.png",
             imageLoader: "images/loader.gif",
-            qrNumber: 0
+            qrNumber: 0,
+            time: 60,
+            winPoints: 5
     };
 
     qrCanvas = {
@@ -28,6 +30,8 @@ $(document).ready(function(){
         }
     };
 
+
+
     qrCanvas.start();
 
     initialize();
@@ -38,18 +42,15 @@ $(document).ready(function(){
     createCanvasImage( (qrCanvas.centerX/2), 300, 200, 200, player.foodURL, foodImage);
 
     createCanvasImage( (qrCanvas.centerX + qrCanvas.centerX/2) , 300, 200, 200, player.qrCodeURL, qrImage);
-
-    createCanvasText( (qrCanvas.centerX + 63) , 450, numberCounter(player.qrNumber), 40, "black");
-
     
 	
-    $("#loginButton").on("click", serverPlay);
+    $("#startButton").on("click", serverPlay);
     $("#continueButton").on("click", reload);
     $("#playAgainButton").on("click", reload);
 
     socket.on('startGame', function(){
       play();
-
+      
     });
 
     socket.on('serveSwipeData', function(evt){
@@ -93,7 +94,7 @@ $(document).ready(function(){
         return num; 
     }
 
-    function createCanvasText(x, y, text, fontSize,color){
+    function createCanvasText(x, y, text, fontSize, color){
         qrCanvas.context.font = fontSize+"px Arial";
         qrCanvas.context.fillStyle = color;
         qrCanvas.context.fillText(text, x, y);
@@ -107,8 +108,6 @@ $(document).ready(function(){
         image.onload = function(){
              qrCanvas.context.drawImage(image, x - w/2, y - h/2, w, h); 
          };
-        
-         
     }
 
     function play(){
@@ -120,6 +119,11 @@ $(document).ready(function(){
         $("#gameScreen").css("background","#3a485100");
 
         createjs.Ticker.addEventListener("tick", update);
+
+        var getParentHeight = $(".displayData > div:nth-child(2)").height();
+
+        $("#userImage").width(getParentHeight+"px");
+        $("#userImage").height(getParentHeight+"px");
     }
 
     function loadComplete(img, imageLoader){
@@ -131,7 +135,7 @@ $(document).ready(function(){
 
         playerScore = 0;
         botScore = 0;
-        time = 30;
+        time = player.time;
         frameCount = 0;
         startCountDown = 3;
 
@@ -184,23 +188,25 @@ $(document).ready(function(){
     function initialize(){
 
         playerScore = 0;
-        time = 30;
+        time = player.time;
         frameCount = 0;
-        winPoints = 3;
+        winPoints = player.winPoints;
         startCountDown = 3; 
 
-        $("#userImage").append('<img src="' + player.imageURL + '">');
+        //$("#userImage").append('<img src="' + player.imageURL + '" alt = "images/avatar.png">');
+
         $(".playerScore").text(playerScore);
         $(".timeCD").text(time);
 
         //Create a stage by getting a reference to the canvas
-        stage = new createjs.Stage("gameScene");
+        stage = new createjs.StageGL("gameScene");
         canvasWidth = stage.canvas.width;
         canvasHeight = stage.canvas.height;
 
         swiperStage = new createjs.Stage("userInterface");
-        swiperWidth = swiperStage.canvas.width;
-        swiperHeight = swiperStage.canvas.height;
+
+        var windowWidth = $(window).width();
+        var windowHeight = $(window).height();
 
         center = {
             x: canvasWidth/2,
@@ -216,12 +222,30 @@ $(document).ready(function(){
             key = (key || []);
             key[e.keyCode] = (e.type == "keydown");
         });
+
+        var gameBackground = new createjs.Bitmap("../images/gameBackground.png");
+
+        stage.addChild(gameBackground);
          
-        ball = new gameBall("black", center.x, center.y, 3, 2);
-        playerPadding = new gamePadding("cyan", 10,  center.y, 2.5, 25);
-        botPadding = new gamePadding("orange", canvasWidth - 10, center.y, 2.5, 25);
+        ball = new gameBall("white", center.x, center.y, 3, 2);
+
+        playerPadding = new gamePadding("cyan", canvasWidth - 10,  center.y, 2.5, 25);
+        botPadding = new gamePadding("orange",  10, center.y, 2.5, 25);
+        
+        gameBackground.image.onload = function(){
+
+            var bound = gameBackground.getBounds();
+
+            gameBackground.cache(0,0, bound.width, bound.height);
+
+            gameBackground.scaleX = 0.3
+            gameBackground.scaleY = 0.25
+            
+        }
 
         createjs.Ticker.timingMode = createjs.Ticker.RAF;
+        createjs.Ticker.frameRate = 60;
+        
         swiperStage.addEventListener("stagemousemove", swipeControl);
         createjs.Touch.enable(swiperStage);
 
@@ -232,18 +256,22 @@ $(document).ready(function(){
 
         this.shape = new createjs.Shape();
         this.shape.graphics.beginFill(color).drawCircle(0, 0, r);
-        this.shape.regX = r/2;
-        this.shape.regY = r/2;
+        this.shape.regX = r;
+        this.shape.regY = r;
         this.shape.x = x;
         this.shape.y = y;
-        this.dirX = -1;
+        this.dirX = 1;
         this.dirY = -1;
         this.r = r;
         this.speed = speed;
+        this.shape.cache(-r, -r, r*2, r*2);
 
         this.move = function(){
+
+            //this.shape.graphics.clear();
             this.shape.x += this.dirX * this.speed;
             this.shape.y += this.dirY * this.speed;
+            this.shape.updateCache();
         }
 
         this.collideOnPadding = function(padding,direction){
@@ -271,28 +299,28 @@ $(document).ready(function(){
         this.edgeBound = function(){
 
             if(this.shape.x + this.r/2 > canvasWidth + 100)this.dirX = -1;
-            else if(this.shape.x - this.r < 0 - 100)this.dirX = 1;
+            else if(this.shape.x - this.r/2 < 0 - 100)this.dirX = 1;
 
             if(this.shape.y + this.r/2 > canvasHeight)this.dirY = -1;
-            else if(this.shape.y - this.r < 0)this.dirY = 1;
+            else if(this.shape.y - this.r/2 < 0)this.dirY = 1;
         }
 
         this.outOfBound = function(resetSpeed){
 
-            //player scores
+            //bot scores
             if(this.shape.x + this.r/2 > canvasWidth + 50){
 
-                playerScore++;
-                $(".playerScore").text(playerScore);
                 this.shape.x = center.x;
                 this.shape.y = center.y;
                 this.dirX = -1;
                 this.speed = resetSpeed;
             }
-            //bot scores
-            else if(this.shape.x - this.r < 0 - 50){
-                botScore++;
-                $(".botScore").text(botScore);
+
+            //player scores
+            else if(this.shape.x - this.r/2 < 0 - 50){
+
+                playerScore++;
+                $(".playerScore").text(playerScore);
 
                 this.shape.x = center.x;
                 this.shape.y = center.y;
@@ -317,10 +345,12 @@ $(document).ready(function(){
         this.dirX = 0;
         this.dirY = 0;
         this.count = 0;
+        this.shape.cache(0, 0, w, h);
 
         this.move = function(speed){
             this.shape.x += this.dirX * speed;
             this.shape.y += this.dirY * speed;
+            this.shape.updateCache();
         }
 
         this.edgeBound = function(){
@@ -360,14 +390,14 @@ $(document).ready(function(){
 
         this.botControl = function(objBall){
 
-            if(objBall.shape.x < canvasWidth/1.5){
+            if(objBall.shape.x > canvasWidth/4){
                 
                 if(this.countInterval(100)){
                     //give random value between -1, 0 ,1
                     this.dirY = Math.floor((Math.random() * 3)) - 1;
                 }
             }
-            else if(objBall.shape.x > canvasWidth/1.5){
+            else if(objBall.shape.x < canvasWidth/4){
 
                 if(this.shape.y < objBall.shape.y)this.dirY = 1;
                 else if(this.shape.y > objBall.shape.y)this.dirY = -1;
@@ -398,10 +428,28 @@ $(document).ready(function(){
                 $(".timeCD").text(time);
 
                 if(time == 0){
+
+                    //player win
                     if(playerScore >= winPoints){
+
+                        retrieveAllData[3] = playerScore;
+                        retrieveAllData[4] = "yes";
+
+                        player.qrNumber = addAndSaveData(retrieveAllData);
+
+                        socket.emit("sendCounterToServer",  player.qrNumber);
                         winGame();
                     }
+                    //player lose
                     else{
+
+                        retrieveAllData[3] = playerScore;
+                        retrieveAllData[4] = "no";
+
+                        player.qrNumber = addAndSaveData(retrieveAllData);
+
+                        socket.emit("sendCounterToServer",  player.qrNumber);
+
                         continueGame();
                     }
 
@@ -415,8 +463,8 @@ $(document).ready(function(){
 
             ball.move();
             ball.edgeBound();
-            ball.collideOnPadding(playerPadding, 1);
-            ball.collideOnPadding(botPadding, -1);
+            ball.collideOnPadding(playerPadding, -1);
+            ball.collideOnPadding(botPadding, 1);
             ball.outOfBound(2);
 
         }
@@ -431,9 +479,7 @@ $(document).ready(function(){
         botPadding.edgeBound();
             
         stage.update();
-
         
-
     }
 
     function swipeControl(evt){
@@ -448,11 +494,19 @@ $(document).ready(function(){
 
     function collidesWith(obj, otherObj){
 
-        var objWidth = obj.shape.x + obj.r/2 > otherObj.shape.x - otherObj.w/2 && obj.shape.x - obj.r < otherObj.shape.x + otherObj.w/2;
+        var objWidth = obj.shape.x + obj.r/2 > otherObj.shape.x - otherObj.w/2 && obj.shape.x - obj.r/2 < otherObj.shape.x + otherObj.w/2;
         var objHeight = obj.shape.y + obj.r/2 > otherObj.shape.y - otherObj.h/2 && obj.shape.y - obj.r/2 < otherObj.shape.y + otherObj.h;
 
         return objWidth && objHeight;
     }
+
+    socket.on('sendDataToPlayer', function(data){
+
+      player.qrNumber = data;
+
+      createCanvasText( (qrCanvas.centerX + 63) , 450, numberCounter(player.qrNumber), 40, "black");
+
+    });
 
 });
 
