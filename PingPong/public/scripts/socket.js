@@ -4,7 +4,8 @@
     var myQue;
     var playAreaLat = 14.669939099999999;
     var playAreaLon = 120.98551709999998;
-    var initialY, initialX;
+    var initialY, initialX, gameTimeOut;
+    var isPlaying = false;
 
     //coupon, wholename, email, score, win
     var retrieveAllData = [0, null, null, 0, "no"];
@@ -15,50 +16,74 @@
 
         getLocation();//disable this if no internet connection to continue
               
-        socket.emit('getMyQue');
+        // socket.emit('getMyQue');
 
     });
 
-    socket.on('chat', function(data){
+    socket.on('handleSignInClick', function(){
 
-        $('#output').append('<div id="left-align"><span id="name">'+data.user+' :'+'</span>'+'<span id="inbound">'+data.message+'</span></div>');
-        
+      handleSignInClick();
     });
 
-    socket.on('updateQue', function(arr){
+     socket.on('showGameArea', function(){
 
-        var pos = arr.indexOf(myId);
+       if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+       // some code..
 
-        if (pos == -1){
+         socket.emit("disconnectInvalidHost");
+      
+      }else{
 
-          gameOver();
 
-        }else if (pos == 0){
+          $("#introduction").hide();
+          $("#nonGameComponent").hide();
+          $(".controller").hide();
+          showGameUi();
 
-            $("#introduction").hide();
-            $("#nonGameComponent").hide();
-            $(".controller").hide();
-            showGameUi();
+       }
 
-        }else if (pos == 1){
+     });
 
-          $(".notification").hide();
-          $(".que-notif").hide();
-          $("#introduction").show();
-            showControlUi();
-            
-        
-        }else if  (pos == 2){
+     socket.on('yourTurn', function(){
 
-          $("#nonGameComponent").show();
+       myQue = 0;
+
+        $(".notification").hide();
+        $(".que-notif").hide();
+        $("#introduction").show();
+        showControlUi();
+
+        gameTimeOut = setTimeout(function(){
+
+              if (isPlaying == false){
+
+                socket.emit('loginTimeout');
+
+                alert("Login timeout!");
+
+              }
+
+            }, 120000);
+
+     });
+
+     socket.on('yourNext', function(){
+
+       myQue = 1;
+
+        $("#nonGameComponent").show();
          
           $("#introduction").hide();
 
-        	$(".que-notif").show();
+          $(".que-notif").show();
 
           $(".notification-text").text("You are the next player");
-        
-        }else{
+
+     });
+
+    socket.on('updateQue', function(pos){
+
+       myQue = pos;
           
           $("#nonGameComponent").show();
 
@@ -66,9 +91,8 @@
 
           $(".que-notif").show();
 
-          $(".notification-text").text("Please standby you are "+ (pos - 1) +" in QUE");
+          $(".notification-text").text("Please standby you are no. "+ pos +" in QUE");
 
-        }
     });
 
     function getLocation() {
@@ -121,7 +145,6 @@
 
           $("#unLocatedUser > div").text("You need to allow the location to play the game");
 
-          //console.log("didnot allow");
 
           socket.emit('quit', { id: myId });
       
@@ -133,7 +156,7 @@
 
           }else{
 
-              socket.emit('getMyQue');
+              // socket.emit('getMyQue');
 
           }
       }
@@ -148,12 +171,14 @@
     function showGameUi(){
 
       $("#gameContainer").show();
+
             
     }
 
     function showControlUi(){
       $("#nonGameComponent").show();
         $(".controller").show();
+
     }
 
     function gameOver(){
@@ -168,33 +193,22 @@
        $("#nonGameComponent").addClass("hide");
        $("#userInterface").show();
        $("#introduction").addClass("hide");
-        socket.emit('play');
+        socket.emit('play');     
+        isPlaying = true;
+        clearTimeout(gameTimeOut);
 
     }
 
-socket.on('sendDataToHost', function(data){
+    socket.on('sendDataToHost', function(data){
 
-      // send data to HOST DOMAIN
+          // send data to HOST DOMAIN
 
-      $("#userImage").css("background","url("+data.imageUrl+")");
+          $("#userImage").css("background","url("+data.imageUrl+")");
 
-      retrieveAllData[1] = data.firstName+" "+data.lastName;
-      retrieveAllData[2] = data.email;
+          retrieveAllData[1] = data.firstName+" "+data.lastName;
+          retrieveAllData[2] = data.email;
 
-      console.log("data send to host: "+retrieveAllData);
-});
+          console.log("data send to host: "+retrieveAllData);
+    });
 
-// socket.on('sendDataToServer', function(data){
-
-//       // send data to HOST DOMAIN
-
-//       $("#userImage").css("background","url("+data.imageUrl+")");
-
-//       retrieveAllData[1] = data.firstname+" "+data.lastname;
-//       retrieveAllData[2] = data.email;
-
-//       console.log("data send to host: "+retrieveAllData);
-
-//       $("#userImage").css("background","url("+data.imageUrl+")");
-
-// });
+        

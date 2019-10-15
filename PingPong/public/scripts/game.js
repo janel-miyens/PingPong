@@ -37,7 +37,7 @@ $(document).ready(function(){
     initialize();
 
     createCanvasImage(qrCanvas.centerX, 60, 150, 40, "images/title.png", titleImage);
-    createCanvasText(80, 150, "Congratulations, You win!", 30, "white");
+    createCanvasText(80, 150, "Congratulations, You win!", 30, "#5d9dcb");
 
     createCanvasImage( (qrCanvas.centerX/2), 300, 200, 200, player.foodURL, foodImage);
 
@@ -176,6 +176,7 @@ $(document).ready(function(){
     }
 
     function reload(){
+        
         location.reload();
     }
 
@@ -485,7 +486,17 @@ $(document).ready(function(){
     function swipeControl(evt){
         // mouseX = evt.stageX;
         // mouseY = evt.stageY;
-        socket.emit("control", {id: myId, x: evt.stageX, y:evt.stageY});
+
+        var online = navigator.onLine;
+
+        if (online){
+
+            socket.emit("control", {id: myId, x: evt.stageX, y:evt.stageY});
+
+        }else{
+
+            alert("Internet connection lost!");
+        }
     }
 
     function keyDown(keyCode){
@@ -504,7 +515,7 @@ $(document).ready(function(){
 
       player.qrNumber = data;
 
-      createCanvasText( (qrCanvas.centerX + 63) , 450, numberCounter(player.qrNumber), 40, "black");
+      createCanvasText( (qrCanvas.centerX + 63) , 450, numberCounter(player.qrNumber), 40, "#5d9dcb");
 
     });
 

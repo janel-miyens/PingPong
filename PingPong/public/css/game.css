@@ -97,7 +97,7 @@ html, body{
     top: 50%;
     font-size: calc(5vw + 10px);
     text-align: center;
-    color: white;
+    color: #fff;
 }
 
 .action-blocks{
@@ -283,7 +283,7 @@ html, body{
 .displayData-blocks > div > div{
     position: relative;
     top: calc(50% - 10px);
-    font-size: calc(1vw + 12px);
+    font-size: calc(1vw + 2px);
 }
 
 .mainText > img{
@@ -352,9 +352,9 @@ html, body{
     z-index: 1000;
 }
 
-#startButton{
+/*#startButton{
     display: block !important;
-}
+}*/
 
     
 
