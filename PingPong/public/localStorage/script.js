@@ -2,8 +2,6 @@
 var dataSet = [];
 var counter = 0;
 
-$(document).ready(function() {
-
     //localStorage.clear();
     
         //load data first
@@ -17,8 +15,6 @@ $(document).ready(function() {
             counter++;
         }
  
-} );
-
 
     function addAndSaveData(data){
 
@@ -34,9 +30,45 @@ $(document).ready(function() {
         }
 
         saveData(addData(dataSet, [counter, data[1], data[2], data[3], data[4]] ) );
+
+        //console.log(counter, data[1], data[2], data[3], data[4]);
+
+        saveDataSpreadSheet(counter, data[1], data[2], data[3], data[4]);
         return counter;
     }
 
+     function saveDataSpreadSheet(coupon, name, email, score, win){
+
+        console.log(coupon, name, email, score, win);
+        
+             var values = [
+                  [
+                      coupon, name, email, score, win
+                    // Cell values ...
+                  ],
+                  // Additional rows ...
+                ];
+
+              var body = {
+                  values: values
+                };
+
+              var parameters = {
+                // The ID of the spreadsheet to retrieve data from.
+                spreadsheetId: '1Nj_Wum0a1J4i56sQT--WcjT1htwtVdUXIKU1F4n3P_Q',  // TODO: Update placeholder value.
+
+                // The A1 notation of the values to retrieve.
+                range: 'Game Report',  // TODO: Update placeholder value.
+                valueInputOption: 'RAW',
+                resource: body
+              };
+                
+                 gapi.client.sheets.spreadsheets.values.append(parameters).then((response) => {
+                  var result = response.result;
+                  //console.log(result);
+                  
+                });
+    }
     //saveData(addData(dataSet, [counter,"janel2","sample2@email.com", 50, "maybe"]));
 
     function addData(dataArray, array){
