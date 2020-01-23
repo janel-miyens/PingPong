@@ -6,79 +6,70 @@ html, body{
     margin: 0;
     font-family: 'Arial' !important;
     display: flex;
+    overflow: hidden;
+    background: #3a4851;
+}
+
+.que-notif{
+
+    width: 100%;
+    height: 100%;
 }
 
 #gameContainer{
 
-	display: block;
+	display: none;
     width: 80%;
-    height: auto;
-    margin: auto;
+    height: 100%;
+    margin: 0 auto;
     min-width: 300px;
     overflow: hidden;
 }
 
-.displayData-block{
-    width: 32%;
-    height: 100%;
-    display: inline;
-    font-size: 2vw;
-    line-height: 60px;
-}
-
-#displayData div:nth-child(1){
-	float: left;
-}
-
-#displayData div:nth-child(3){
-	float: right;
-}
-
 #gameScene{
-	width: 90%;
-    background: gray;
+    width: 90%;
     position: relative;
     display: block;
     margin: 0 auto;
-    border-radius: 5px;
+    height: auto;
+    max-width: 768px;
 } 
 
-#displayData{
+.displayData{
     width: 90%;
-    height: 50%;
+    height: 20%;
+    max-width: 768px;
     margin: 0 auto;
     display: block;
     position: relative;
     text-align: center;
     margin-top: 10px;
-}
-
-#swiper{
-	width: 100%;
-    height: 100%;    
+    color: white;
 }
 
 #userInterface{
-	background: gray;
-	border: 1px solid;
+	background: url("../images/arrow.png");
 	width: auto;
-	height: 95%;
-	display: inline-table;
+	height: 100%;
+	display: none;
 	overflow: hidden;
 	margin: auto;
-	max-height: 300px;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 #nonGameComponent{
-	width: 100%;
+    /*display: none;*/
+    display: none;
+	width: calc(100% - 1px);
     height: 100%;
     position: absolute;
     background: #3e3e3e;
-
+    overflow: hidden;
 }
 
 #panel{
-    border: 1px solid white;
     width: 100%;
     height: 100%;
     max-width: 768px;
@@ -86,11 +77,9 @@ html, body{
     background: #3a4851;
     text-align: center;
     color: white;
-    border-top: none;
-    border-bottom: none;
 }
 
-#introduction, #win, #playAgain{
+#introduction, #win, #playAgain, #swiper{
     height: 100%;
     width: 100%;
 }
@@ -107,13 +96,15 @@ html, body{
     position: relative;
     top: 50%;
     font-size: calc(5vw + 10px);
+    text-align: center;
+    color: white;
 }
 
 .action-blocks{
     height: 50%;
 }
 
-#loginButton, #playAgainButton, #continueButton{
+#playAgainButton, #downloadButton, .buttons{
     border-radius: 100px;
     margin: 0 auto;
     font-size: 20px;
@@ -124,6 +115,11 @@ html, body{
     background: #48565f;
     position: relative;
     top: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    display: block;
+    color: white;
+    text-decoration: none;
 }
 
 #agreementText{
@@ -132,6 +128,7 @@ html, body{
     min-width: 160px;
     height: fit-content;
     font-size: 12px;
+    color: white;
 }
 
 #loader{
@@ -162,7 +159,7 @@ html, body{
 }
 
 #win > div:nth-child(2){
-    height: 20%;   
+    height: 10%;   
 }
 
 #win > div:nth-child(3){
@@ -215,9 +212,150 @@ html, body{
 
 #userImage > img{
     width: 24%;
-    max-width: 160px;
+    max-width: 140px;
 }
 
 .imageLoader{
     background-image: url("../images/loader.gif");
 }
+
+#gameScreen{
+    background: #3a4851;
+    width: calc(100% - 10px);
+    height: 100%;
+    position: absolute;
+    margin: 0;
+    z-index: 2;
+    top: 0;
+    left: 0;
+}
+
+#gameScreen > div.mainText{
+    top: 30%;
+}
+
+.displayTitle{
+    width: 90%;
+    margin: 0 auto;
+    text-align: center;
+    padding: 10px;
+    height: 10%;
+    max-width: 768px;
+}
+
+.displayTitle > img{
+    width: 30%;
+    top: calc(50% - 10px);
+    position: relative;
+    max-width: 200px;
+}
+
+.displayData-blocks{
+    width: 31%;
+    height: 100%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.displayData > div:nth-child(1) > div{
+    background-image: url("../images/displayData.png");
+}
+
+.displayData > div:nth-child(2) > div{
+    background-image: url("../images/avatar.png");
+    border-radius: 100px;
+    margin: 0 auto;
+    background-position: center !important;
+}
+
+.displayData > div:nth-child(3) > div{
+    background-image: url("../images/displayData.png");
+}
+
+.displayData-blocks > div{
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100%;
+}
+
+.displayData-blocks > div > div{
+    position: relative;
+    top: calc(50% - 10px);
+    font-size: calc(1vw + 12px);
+}
+
+.mainText > img{
+    width: calc(40% + 120px);
+}
+
+
+#continueButton {
+    border-radius: 100px;
+    margin: 0 auto;
+    font-size: 20px;
+    line-height: 65px;
+    height: 65px;
+    width: 70%;
+    max-width: 500px;
+    background: #48565f;
+    position: relative;
+    top: 30%;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.displayTitle > span{
+    top: 90%;
+    position: sticky;
+    color: white;
+    font-size: calc(1vw + 5px);
+}
+
+.displayTitle > span:nth-child(1){
+    float: left;
+}
+
+.displayTitle > span:nth-child(3){
+    float: right;
+}
+
+#qr{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    display: block;
+    margin: 0 auto;
+    z-index: 11;
+    overflow: hidden;
+}
+
+#qr > canvas{
+    width: 100%;
+    margin: 0 auto;
+    display: block;
+    border: 1px solid;
+    image-rendering: optimizeQuality;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: optimize-contrast;
+    -ms-interpolation-mode: nearest-neighbor;
+}
+
+#unLocatedUser{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    display: block;
+    background: #3a4851;
+    z-index: 1000;
+}
+
+#startButton{
+    display: block !important;
+}
+
+    
+
+

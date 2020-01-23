@@ -1,6 +1,7 @@
-    
+
 	var stage, canvasWidth, canvasHeight, ball, key, playerPadding, botPadding, playerScore, botScore, mouseX, mouseY, swiperStage;
-	var swiperWidth, swiperHeight, time, frameCount, center, player, winPoints;
+	var swiperWidth, swiperHeight, time, frameCount, center, player, winPoints, startCountDown;
+    var qrCanvas, qrImage, foodImage, downloadQR, titleImage;
 
 $(document).ready(function(){
 
@@ -9,24 +10,120 @@ $(document).ready(function(){
             imageURL: "images/avatar.png",
             foodURL: "images/food.png",
             qrCodeURL: "images/qrCode.png",
-            imageLoader: "images/loader.gif"
+            imageLoader: "images/loader.gif",
+            qrNumber: 0,
+            time: 60,
+            winPoints: 5
     };
 
+    qrCanvas = {
+        //canvas: document.getElementById("qrCanvas"),
+        canvas: document.createElement("Canvas"),
+        start: function(){
+            
+            this.context = this.canvas.getContext("2d");
+            this.canvas.width = 480;
+            this.canvas.height = 500;
+            this.centerX = this.canvas.width/2;
+            this.centerY = this.canvas.height/2;
+            $(this.canvas).css("background-color","rgb(58, 72, 81)");
+        }
+    };
+
+
+
+    qrCanvas.start();
+
     initialize();
+
+    createCanvasImage(qrCanvas.centerX, 60, 150, 40, "images/title.png", titleImage);
+    createCanvasText(80, 150, "Congratulations, You win!", 30, "white");
+
+    createCanvasImage( (qrCanvas.centerX/2), 300, 200, 200, player.foodURL, foodImage);
+
+    createCanvasImage( (qrCanvas.centerX + qrCanvas.centerX/2) , 300, 200, 200, player.qrCodeURL, qrImage);
+    
 	
-    $("#loginButton").on("click", play);
-    $("#continueButton").on("click", continueGame);
+    $("#startButton").on("click", serverPlay);
+    $("#continueButton").on("click", reload);
     $("#playAgainButton").on("click", reload);
+
+    socket.on('startGame', function(){
+      play();
+      
+    });
+
+    socket.on('serveSwipeData', function(evt){
+
+        mouseX = evt.stageX;
+        mouseY = evt.stageY;
+
+    });
+
+    socket.on('displayCoupon', function(){
+
+        $("#nonGameComponent").removeClass("hide");
+        $("#win").removeClass("hide");
+        $("#playAgain").addClass("hide");
+        $("#foodPhoto").append('<img class = "image" src="' + player.foodURL + '">');
+        $("#qrCode").append('<img class = "image" src="' + player.qrCodeURL + '">');
+
+    });
+
+    socket.on('displayTryAgain', function(){
+
+        $("#nonGameComponent").removeClass("hide");
+        $("#win").addClass("hide");
+        $("#playAgain").removeClass("hide");
+
+    });
+
+    downloadQR = function(el){
+        var image = qrCanvas.canvas.toDataURL("image/jpg", 1.0);
+        el.href = image;
+    }
+
+    function numberCounter(num){
+
+        if(num > 9999) return num.toString();
+        else if(num > 999) return "0"+num;
+        else if(num > 99) return "00"+num;
+        else if(num > 9) return "000"+num;
+        else if(num < 10) return "0000"+num;
+
+        return num; 
+    }
+
+    function createCanvasText(x, y, text, fontSize, color){
+        qrCanvas.context.font = fontSize+"px Arial";
+        qrCanvas.context.fillStyle = color;
+        qrCanvas.context.fillText(text, x, y);
+        
+    }
+
+    function createCanvasImage(x, y, w, h, src, image){
+
+        image = new Image();
+        image.src = src;
+        image.onload = function(){
+             qrCanvas.context.drawImage(image, x - w/2, y - h/2, w, h); 
+         };
+    }
 
     function play(){
 
-
-        $("#nonGameComponent").addClass("hide");
-        $("#introduction").addClass("hide");
         $("#win").addClass("hide");
         $("#playAgain").addClass("hide");
+        $("#gameScreen > div:nth-child(1)").addClass("hide");
+        $("#gameScreen > div:nth-child(2)").text(startCountDown);
+        $("#gameScreen").css("background","#3a485100");
 
         createjs.Ticker.addEventListener("tick", update);
+
+        var getParentHeight = $(".displayData > div:nth-child(2)").height();
+
+        $("#userImage").width(getParentHeight+"px");
+        $("#userImage").height(getParentHeight+"px");
     }
 
     function loadComplete(img, imageLoader){
@@ -38,14 +135,28 @@ $(document).ready(function(){
 
         playerScore = 0;
         botScore = 0;
-        time = 30;
+        time = player.time;
         frameCount = 0;
+        startCountDown = 3;
 
-        ball.x =  center.x;
-        ball.y =  center.y;
+        $("#gameScreen > div:nth-child(1)").removeClass("hide");
+        $("#gameScreen > div:nth-child(2)").text("");
+        $("#gameScreen").css("background","#3a4851");
+        $("#gameScreen").removeClass("hide");
 
-        playerPadding.y = center.y;
-        botPadding.y = center.y;
+        center = {
+            x: canvasWidth/2,
+            y: canvasHeight/2
+        };
+
+        ball.shape.x =  center.x;
+        ball.shape.y =  center.y;
+        ball.dirX = -1;
+        ball.dirY = -1;
+        ball.speed = 2;
+
+        playerPadding.shape.y = center.y;
+        botPadding.shape.y = center.y;
 
         $(".playerScore").text(playerScore);
         $(".timeCD").text(time);
@@ -53,47 +164,23 @@ $(document).ready(function(){
 
     function winGame(){
 
-        $("#nonGameComponent").removeClass("hide");
-        $("#win").removeClass("hide");
-        $("#playAgain").addClass("hide");
-
-        $("#foodPhoto").append('<img class = "foodImageLoader" src="' + player.imageLoader + '">');
-
-        $("#foodPhoto").append('<img id = "food" class = "image hide" src="' + player.foodURL + '">');
-
-        $( "#food" ).on("load", function() {
-            $("#food").removeClass('hide');
-            $(".foodImageLoader").addClass('hide');
-        });
-
-        $("#qrCode").append('<img class = "qrCodeImageLoader" src="' + player.imageLoader + '">');
-
-        $("#qrCode").append('<img id= "qrCodeImg" class = "image hide" src="' + player.qrCodeURL + '">');
-
-        $( "#qrCodeImg" ).on("load", function() {
-            $("#qrCodeImg").removeClass('hide');
-            $(".qrCodeImageLoader").addClass('hide');
-        });
-
         pauseGame();
+        socket.emit("win");
+
     }
 
     function continueGame(){
 
-        $("#nonGameComponent").removeClass("hide");
-        $("#win").addClass("hide");
-        $("#playAgain").removeClass("hide");
-
         pauseGame();
+        socket.emit("lose");
     }
 
     function reload(){
         location.reload();
     }
 
-
-
     function pauseGame(){
+
          createjs.Ticker.removeEventListener("tick", update);
          restartGame();
     }
@@ -101,22 +188,25 @@ $(document).ready(function(){
     function initialize(){
 
         playerScore = 0;
-        botScore = 0;
-        time = 30;
+        time = player.time;
         frameCount = 0;
-        winPoints = 5; 
+        winPoints = player.winPoints;
+        startCountDown = 3; 
 
-        $("#userImage").append('<img src="' + player.imageURL + '">');
+        //$("#userImage").append('<img src="' + player.imageURL + '" alt = "images/avatar.png">');
 
+        $(".playerScore").text(playerScore);
+        $(".timeCD").text(time);
 
         //Create a stage by getting a reference to the canvas
-        stage = new createjs.Stage("gameScene");
+        stage = new createjs.StageGL("gameScene");
         canvasWidth = stage.canvas.width;
         canvasHeight = stage.canvas.height;
 
         swiperStage = new createjs.Stage("userInterface");
-        swiperWidth = swiperStage.canvas.width;
-        swiperHeight = swiperStage.canvas.height;
+
+        var windowWidth = $(window).width();
+        var windowHeight = $(window).height();
 
         center = {
             x: canvasWidth/2,
@@ -133,12 +223,29 @@ $(document).ready(function(){
             key[e.keyCode] = (e.type == "keydown");
         });
 
+        var gameBackground = new createjs.Bitmap("../images/gameBackground.png");
+
+        stage.addChild(gameBackground);
          
-        ball = new gameBall("black", center.x, center.y, 3, 2);
-        playerPadding = new gamePadding("cyan", 10,  center.y, 2.5, 25);
-        botPadding = new gamePadding("orange", canvasWidth - 10, center.y, 2.5, 25);
+        ball = new gameBall("white", center.x, center.y, 3, 2);
+
+        playerPadding = new gamePadding("cyan", canvasWidth - 10,  center.y, 2.5, 25);
+        botPadding = new gamePadding("orange",  10, center.y, 2.5, 25);
+        
+        gameBackground.image.onload = function(){
+
+            var bound = gameBackground.getBounds();
+
+            gameBackground.cache(0,0, bound.width, bound.height);
+
+            gameBackground.scaleX = 0.3
+            gameBackground.scaleY = 0.25
+            
+        }
 
         createjs.Ticker.timingMode = createjs.Ticker.RAF;
+        createjs.Ticker.frameRate = 60;
+        
         swiperStage.addEventListener("stagemousemove", swipeControl);
         createjs.Touch.enable(swiperStage);
 
@@ -149,18 +256,22 @@ $(document).ready(function(){
 
         this.shape = new createjs.Shape();
         this.shape.graphics.beginFill(color).drawCircle(0, 0, r);
-        this.shape.regX = r/2;
-        this.shape.regY = r/2;
+        this.shape.regX = r;
+        this.shape.regY = r;
         this.shape.x = x;
         this.shape.y = y;
         this.dirX = 1;
-        this.dirY = 1;
+        this.dirY = -1;
         this.r = r;
         this.speed = speed;
+        this.shape.cache(-r, -r, r*2, r*2);
 
         this.move = function(){
+
+            //this.shape.graphics.clear();
             this.shape.x += this.dirX * this.speed;
             this.shape.y += this.dirY * this.speed;
+            this.shape.updateCache();
         }
 
         this.collideOnPadding = function(padding,direction){
@@ -188,28 +299,28 @@ $(document).ready(function(){
         this.edgeBound = function(){
 
             if(this.shape.x + this.r/2 > canvasWidth + 100)this.dirX = -1;
-            else if(this.shape.x - this.r < 0 - 100)this.dirX = 1;
+            else if(this.shape.x - this.r/2 < 0 - 100)this.dirX = 1;
 
             if(this.shape.y + this.r/2 > canvasHeight)this.dirY = -1;
-            else if(this.shape.y - this.r < 0)this.dirY = 1;
+            else if(this.shape.y - this.r/2 < 0)this.dirY = 1;
         }
 
         this.outOfBound = function(resetSpeed){
 
-            //player scores
+            //bot scores
             if(this.shape.x + this.r/2 > canvasWidth + 50){
 
-                playerScore++;
-                $(".playerScore").text(playerScore);
                 this.shape.x = center.x;
                 this.shape.y = center.y;
                 this.dirX = -1;
                 this.speed = resetSpeed;
             }
-            //bot scores
-            else if(this.shape.x - this.r < 0 - 50){
-                botScore++;
-                $(".botScore").text(botScore);
+
+            //player scores
+            else if(this.shape.x - this.r/2 < 0 - 50){
+
+                playerScore++;
+                $(".playerScore").text(playerScore);
 
                 this.shape.x = center.x;
                 this.shape.y = center.y;
@@ -234,10 +345,12 @@ $(document).ready(function(){
         this.dirX = 0;
         this.dirY = 0;
         this.count = 0;
+        this.shape.cache(0, 0, w, h);
 
         this.move = function(speed){
             this.shape.x += this.dirX * speed;
             this.shape.y += this.dirY * speed;
+            this.shape.updateCache();
         }
 
         this.edgeBound = function(){
@@ -277,14 +390,14 @@ $(document).ready(function(){
 
         this.botControl = function(objBall){
 
-            if(objBall.shape.x < canvasWidth/1.5){
+            if(objBall.shape.x > canvasWidth/4){
                 
                 if(this.countInterval(100)){
                     //give random value between -1, 0 ,1
                     this.dirY = Math.floor((Math.random() * 3)) - 1;
                 }
             }
-            else if(objBall.shape.x > canvasWidth/1.5){
+            else if(objBall.shape.x < canvasWidth/4){
 
                 if(this.shape.y < objBall.shape.y)this.dirY = 1;
                 else if(this.shape.y > objBall.shape.y)this.dirY = -1;
@@ -304,25 +417,57 @@ $(document).ready(function(){
         //60 frame = 1 seconds
         if(frameCount > 60 && time != 0){
             frameCount = 0;
-            time--;
-            $(".timeCD").text(time);
 
-            if(time == 0){
-                if(playerScore >= winPoints){
-                    winGame();
-                }
-                else{
-                    continueGame();
+            if(startCountDown != 0){
+                startCountDown--;
+                $("#gameScreen > div:nth-child(2)").text(startCountDown);
+            }
+            else{   
+
+                time--;
+                $(".timeCD").text(time);
+
+                if(time == 0){
+
+                    //player win
+                    if(playerScore >= winPoints){
+
+                        retrieveAllData[3] = playerScore;
+                        retrieveAllData[4] = "yes";
+
+                        player.qrNumber = addAndSaveData(retrieveAllData);
+
+                        socket.emit("sendCounterToServer",  player.qrNumber);
+                        winGame();
+                    }
+                    //player lose
+                    else{
+
+                        retrieveAllData[3] = playerScore;
+                        retrieveAllData[4] = "no";
+
+                        player.qrNumber = addAndSaveData(retrieveAllData);
+
+                        socket.emit("sendCounterToServer",  player.qrNumber);
+
+                        continueGame();
+                    }
+
                 }
             }
         }
 
-        ball.move();
-        ball.edgeBound();
-        ball.collideOnPadding(playerPadding, 1);
-        ball.collideOnPadding(botPadding, -1);
-        ball.outOfBound(2);
+        if(startCountDown == 0){
+            $("#gameScreen").addClass("hide");
+            $("#gameScreen > div:nth-child(1)").removeClass("hide");
 
+            ball.move();
+            ball.edgeBound();
+            ball.collideOnPadding(playerPadding, -1);
+            ball.collideOnPadding(botPadding, 1);
+            ball.outOfBound(2);
+
+        }
 
         playerPadding.move(2);
         //playerPadding.playerControl();
@@ -332,14 +477,15 @@ $(document).ready(function(){
         botPadding.move(1);
         botPadding.botControl(ball);
         botPadding.edgeBound();
-        
+            
         stage.update();
-
+        
     }
 
     function swipeControl(evt){
-        mouseX = evt.stageX;
-        mouseY = evt.stageY;
+        // mouseX = evt.stageX;
+        // mouseY = evt.stageY;
+        socket.emit("control", {id: myId, x: evt.stageX, y:evt.stageY});
     }
 
     function keyDown(keyCode){
@@ -348,11 +494,19 @@ $(document).ready(function(){
 
     function collidesWith(obj, otherObj){
 
-        var objWidth = obj.shape.x + obj.r/2 > otherObj.shape.x - otherObj.w/2 && obj.shape.x - obj.r < otherObj.shape.x + otherObj.w/2;
+        var objWidth = obj.shape.x + obj.r/2 > otherObj.shape.x - otherObj.w/2 && obj.shape.x - obj.r/2 < otherObj.shape.x + otherObj.w/2;
         var objHeight = obj.shape.y + obj.r/2 > otherObj.shape.y - otherObj.h/2 && obj.shape.y - obj.r/2 < otherObj.shape.y + otherObj.h;
 
         return objWidth && objHeight;
     }
+
+    socket.on('sendDataToPlayer', function(data){
+
+      player.qrNumber = data;
+
+      createCanvasText( (qrCanvas.centerX + 63) , 450, numberCounter(player.qrNumber), 40, "black");
+
+    });
 
 });
 

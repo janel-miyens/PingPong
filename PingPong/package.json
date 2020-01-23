@@ -1,0 +1,23 @@
+{
+  "name": "pingpong",
+  "version": "1.0.0",
+  "description": "PingPong",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "miyens",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "npm": "^6.11.3",
+    "package.json": "^2.0.1",
+    "recordrtc-socketio": "^1.0.6",
+    "socket.io": "^2.3.0"
+  },
+  "engines": {
+    "node": "v10.16.3",
+    "npm": "6.9.0"
+  }
+}
